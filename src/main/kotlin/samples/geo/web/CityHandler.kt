@@ -1,16 +1,13 @@
 package samples.geo.web
 
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.BodyInserters.fromValue
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.awaitBody
 import org.springframework.web.reactive.function.server.bodyValueAndAwait
 import org.springframework.web.reactive.function.server.buildAndAwait
-import reactor.core.publisher.Mono
 import samples.geo.domain.City
 import samples.geo.service.CityService
 
@@ -25,7 +22,10 @@ class CityHandler(private val cityService: CityService) {
     suspend fun getCity(request: ServerRequest): ServerResponse {
         val id = request.pathVariable("id").toLong()
         val city = cityService.getCity(id)
-        return ServerResponse.ok().bodyValueAndAwait(city)
+
+        return city
+            ?.let { ServerResponse.ok().bodyValueAndAwait(it) }
+            ?: ServerResponse.notFound().buildAndAwait()
     }
 
     suspend fun createCity(request: ServerRequest): ServerResponse {
