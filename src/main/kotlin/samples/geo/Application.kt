@@ -1,28 +1,16 @@
 package samples.geo
 
-import io.r2dbc.spi.ConnectionFactory
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
-import org.springframework.core.io.ClassPathResource
-import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer
-import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator
 import org.springframework.stereotype.Service
 import samples.geo.domain.City
 import samples.geo.repo.CityRepo
 
 @SpringBootApplication
 class Application {
-    @Bean
-    fun initializer(connectionFactory: ConnectionFactory): ConnectionFactoryInitializer {
-        val initializer = ConnectionFactoryInitializer()
-        initializer.setConnectionFactory(connectionFactory)
-        initializer.setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("schema.sql")))
-        return initializer
-    }
 }
 
 fun main(args: Array<String>) {
